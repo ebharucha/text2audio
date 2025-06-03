@@ -8,7 +8,7 @@ from openai import OpenAI
 import elevenlabs
 
 # Generate audio via OpenAI text to audio
-def audiogen_openai(OPENAI_API_KEY, input_file, content):
+def audiogen_openai(OPENAI_API_KEY, input_file, AUDIO_OUTPUT_DIR, content):
     client = OpenAI(api_key=OPENAI_API_KEY)  # Requires API key
     with client.audio.speech.with_streaming_response.create(
         model="tts-1", 
@@ -23,30 +23,42 @@ def audiogen_openai(OPENAI_API_KEY, input_file, content):
         input=content,
         speed=0.9  # Slower speed (0.25 to 4.0, where 1.0 is default)
     ) as response:
-        response.stream_to_file(f'data/audio/{input_file}.mp3')
+        try:
+            response.stream_to_file(f'{AUDIO_OUTPUT_DIR}/{input_file}.mp3')
+        except Exception as e:
+            print(f"Failed to save audio: {e}")
 
 # Generate audio via ElevenLabs text to audio
-def audiogen_elevenlabs(ELEVENLABS_API_KEY, input_file, content):
+def audiogen_elevenlabs(ELEVENLABS_API_KEY, input_file, AUDIO_OUTPUT_DIR, content):
     elevenlabs.set_api_key(ELEVENLABS_API_KEY)
     # Generate audio using ElevenLabs
     audio = elevenlabs.generate(
         text=content,
-        voice="ERB",
+        voice="ERB", 
         model="eleven_monolingual_v1"
     )
     # Save the audio
-    with open("data/audio/elevenlabs.mp3", "wb") as f:
+    with open(f'{AUDIO_OUTPUT_DIR}/{input_file}.mp3', "wb") as f:
         f.write(audio)
 
 def main():
     # load .env file to environment
     load_dotenv()
     OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")
-    # ELEVENLABS_API_KEY = os.getenv("ELEVENLABS_API_KEY")
-    input_file = "Post1-AI_ML_DL_LLMs" # Provide name of the input text file without the .txt extension
-    with open(f'data/text/{input_file}.txt', "r") as file:
+     # ELEVENLABS_API_KEY = os.getenv("ELEVENLABS_API_KEY")
+
+    TEXT_INPUT_DIR = "data/text"
+    os.makedirs(TEXT_INPUT_DIR, exist_ok=True)  # Ensure dir exists
+
+    AUDIO_OUTPUT_DIR = "data/audio"
+    os.makedirs(AUDIO_OUTPUT_DIR, exist_ok=True)  # Ensure dir exists
+   
+    input_file = "test" # Provide name of the input text file without the .txt extension
+    # input_file = "Post2-AI_Transformers" # Provide name of the input text file without the .txt extension
+    with open(f'{TEXT_INPUT_DIR}/{input_file}.txt', "r") as file:
         content = file.read()
-    audiogen_openai(OPENAI_API_KEY, input_file, content)
+    
+    audiogen_openai(OPENAI_API_KEY, input_file, AUDIO_OUTPUT_DIR, content)
     # audiogen_elevenlabs(ELEVENLABS_API_KEY, content)
 
 if __name__ == "__main__":
