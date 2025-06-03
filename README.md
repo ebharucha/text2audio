@@ -8,5 +8,5 @@
 6. Set the "**input_file**" variable to the "**text file name**" <ins>without</ins> the .txt extension.
 7. The associated mp3 audio file will be generated and stored under the "**data/audio/**" directory.
 
-Ed Bharucha
+Ed Bharucha<br>
 @ebharucha
