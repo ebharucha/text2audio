@@ -4,8 +4,7 @@
    "**ELEVENLABS_API_KEY**" variable to your ElevenLabs API key
 3. Uncomment either the "**audiogen_openai**" or "**audiogen_elevenlabs**" function under main depending on your preference.
 4. Modify the voice parameter under the "**audiogen_openai**" or "**audiogen_elevenlabs**" functions as appropriate.
-5. Store the text file to covert to audio under the "**data/text/**" directory.
-6. Set the "**input_file**" variable to the "**text file name**" <ins>**without**</ins> the .txt extension.
+5. Script usage "usage: text2audio.py [-h] --textfile FILE"
 7. The associated mp3 audio file will be generated and stored under the "**data/audio/**" directory.
 
 Ed Bharucha<br>
